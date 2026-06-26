@@ -22,7 +22,7 @@ export class ARManager {
     this.trackingProvider = new MindARProvider();
     this.trackingProvider.initialize();
 
-    this.setStatus("ARManager initialized");
+    this.setStatus("Ready");
   }
 
   async startCamera() {
@@ -33,21 +33,18 @@ export class ARManager {
   }
 
   async startTracking() {
-    console.log("Start tracking button pressed");
-    this.setStatus("Start tracking button pressed");
-
     if (!this.trackingProvider) {
       this.setStatus("Tracking provider missing");
       return;
     }
 
     try {
-      this.setStatus("Starting tracking...");
+      this.setStatus("Starting AR...");
       await this.trackingProvider.start();
-      this.setStatus("Tracking started");
+      this.setStatus("AR running");
     } catch (error) {
       console.error(error);
-      this.setStatus(`Tracking error: ${error.message}`);
+      this.setStatus(`AR error: ${error.message}`);
     }
   }
 

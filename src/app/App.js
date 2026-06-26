@@ -19,8 +19,7 @@ export class App {
         <p>v0.2 — camera passthrough prototype</p>
 
         <div class="buttons">
-          <button id="startCamera">Start camera</button>
-          <button id="startTracking">START AR TEST</button>
+          <button id="startTracking">Start AR Experience</button>
           <button id="openPortal">Open portal</button>
         </div>
 
@@ -37,12 +36,6 @@ export class App {
     );
 
     await this.portal.initialize();
-
-    this.root
-      .querySelector("#startCamera")
-      .addEventListener("click", async () => {
-        await this.ar.startCamera();
-      });
 
     this.root
       .querySelector("#startTracking")
