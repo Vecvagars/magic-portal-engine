@@ -4,38 +4,44 @@ export class App {
   constructor(root) {
     this.root = root;
     this.engine = null;
-    this.portal = null;
   }
 
   async start() {
     this.root.innerHTML = `
-      <<div id="ar-container"></div>
+      <div id="ar-container"></div>
 
       <div class="ui">
         <div class="badge">Magic Nebula</div>
-        <h1>Magic Portal Engine</h1>
-        <p>v0.2 — camera passthrough prototype</p>
+        <h1>Magic Nebula Engine</h1>
+        <p>v0.4 — runtime foundation</p>
 
         <div class="buttons">
-          <button id="startTracking">Start AR Experience</button>
+          <button id="startExperience">Start AR Experience</button>
         </div>
 
-        <div id="status">Camera not started</div>
+        <div id="status">Ready</div>
       </div>
-    `
+    `;
 
-    this.engine = new MagicNebulaEngine(this.root);
+    this.engine = new MagicNebulaEngine({
+      root: this.root,
+    });
+
     await this.engine.initialize();
 
     this.root
-      .querySelector("#startTracking")
+      .querySelector("#startExperience")
       .addEventListener("click", async () => {
         const status = this.root.querySelector("#status");
-        status.textContent = "START AR TEST CLICKED";
 
-        console.log("START AR TEST CLICKED");
-
-        await this.engine.startTracking();
+        try {
+          status.textContent = "Starting AR...";
+          await this.engine.start();
+          status.textContent = "AR running";
+        } catch (error) {
+          console.error(error);
+          status.textContent = `AR error: ${error.message}`;
+        }
       });
   }
 }

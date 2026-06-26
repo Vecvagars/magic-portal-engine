@@ -1,36 +1,27 @@
 import { ARManager } from "../ar/ARManager.js";
 
 export class MagicNebulaEngine {
-
-  constructor(root) {
+  constructor({ root }) {
     this.root = root;
     this.arManager = null;
   }
 
   async initialize() {
-
     this.arManager = new ARManager(this.root);
-
     this.arManager.initialize();
-
   }
 
-  async startCamera() {
-
-    await this.arManager.startCamera();
-
-  }
-
-  async startTracking() {
+  async start() {
+    if (!this.arManager) {
+      throw new Error("MagicNebulaEngine is not initialized");
+    }
 
     await this.arManager.startTracking();
-
   }
 
-  async stopTracking() {
+  async stop() {
+    if (!this.arManager) return;
 
     await this.arManager.stopTracking();
-
   }
-
 }
