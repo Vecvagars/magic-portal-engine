@@ -26,9 +26,6 @@ export class ARManager {
   }
 
   async startCamera() {
-    console.log("Start tracking button pressed");
-    this.setStatus("Start tracking button pressed");
-    
     if (!this.camera) return;
 
     this.setStatus("Starting camera...");
@@ -36,6 +33,9 @@ export class ARManager {
   }
 
   async startTracking() {
+    console.log("Start tracking button pressed");
+    this.setStatus("Start tracking button pressed");
+
     if (!this.trackingProvider) return;
 
     this.setStatus("Starting tracking...");
