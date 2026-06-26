@@ -1,13 +1,16 @@
 import * as THREE from "three";
-import { DOORWAY_CONFIG } from "../config/DoorwayConfig.js";
 import { TunnelGeometry } from "./TunnelGeometry.js";
 import { FrameGeometry } from "./FrameGeometry.js";
 
 export class DoorwayPortal {
+  constructor(config) {
+    this.config = config;
+  }
+
   create() {
     const group = new THREE.Group();
 
-    const config = DOORWAY_CONFIG;
+    const config = this.config;
 
     const frameWidth = config.width - config.frameInset * 2;
     const frameHeight = config.height - config.frameInset * 2;

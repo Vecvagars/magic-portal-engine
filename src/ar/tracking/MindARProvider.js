@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { TrackingProvider } from "./TrackingProvider.js";
 import { DoorwayPortal } from "../../portal/DoorwayPortal.js";
+import { ALTUM_DOORWAY_SCENE } from "../../projects/altum-doorway/scene.config.js";
 
 export class MindARProvider extends TrackingProvider {
   constructor() {
@@ -21,7 +22,7 @@ export class MindARProvider extends TrackingProvider {
 
     this.mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
-      imageTargetSrc: "/assets/targets/doorway-arch-far.mind",
+      imageTargetSrc: ALTUM_DOORWAY_SCENE.tracking.target,
     });
 
     const { scene } = this.mindarThree;
@@ -31,7 +32,7 @@ export class MindARProvider extends TrackingProvider {
 
     this.anchor = this.mindarThree.addAnchor(0);
 
-    const portal = new DoorwayPortal();
+    const portal = new DoorwayPortal(ALTUM_DOORWAY_SCENE.portal);
     const portalGroup = portal.create();
 
     portalGroup.position.set(0, 0, 0);
