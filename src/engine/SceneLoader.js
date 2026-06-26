@@ -16,4 +16,38 @@ export class SceneLoader {
       return module;
     });
   }
+
+  start() {
+    this.modules.forEach((module) => {
+      if (typeof module.start === "function") {
+        module.start();
+      }
+    });
+  }
+
+  update(delta) {
+    this.modules.forEach((module) => {
+      if (typeof module.update === "function") {
+        module.update(delta);
+      }
+    });
+  }
+
+  stop() {
+    this.modules.forEach((module) => {
+      if (typeof module.stop === "function") {
+        module.stop();
+      }
+    });
+  }
+
+  destroy() {
+    this.modules.forEach((module) => {
+      if (typeof module.destroy === "function") {
+        module.destroy();
+      }
+    });
+
+    this.modules = [];
+  }
 }
