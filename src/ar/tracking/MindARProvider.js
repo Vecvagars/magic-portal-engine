@@ -20,7 +20,7 @@ export class MindARProvider extends TrackingProvider {
 
     this.mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
-      imageTargetSrc: "/assets/targets/altum-poster.mind",
+      imageTargetSrc: "/assets/targets/doorway-arch-far.mind",
     });
 
     const { scene } = this.mindarThree;
@@ -31,8 +31,8 @@ export class MindARProvider extends TrackingProvider {
     this.anchor = this.mindarThree.addAnchor(0);
 
     const portalGroup = this.createPortalVisual();
-    portalGroup.position.set(-1.25, 0.15, 0);
-    portalGroup.scale.set(1.15, 1.45, 1);
+    portalGroup.position.set(0, 0, 0);
+    portalGroup.scale.set(1, 1, 1);
 
     this.anchor.group.add(portalGroup);
 
