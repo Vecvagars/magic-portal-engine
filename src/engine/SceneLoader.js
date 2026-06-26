@@ -4,16 +4,16 @@ export class SceneLoader {
   constructor(sceneDefinition) {
     this.sceneDefinition = sceneDefinition;
     this.moduleFactory = new ModuleFactory();
+    this.modules = [];
   }
 
   attachTo(anchorGroup) {
-    const modules = this.sceneDefinition.modules || [];
+    const moduleDefinitions = this.sceneDefinition.modules || [];
 
-    modules.forEach((moduleDefinition) => {
+    this.modules = moduleDefinitions.map((moduleDefinition) => {
       const module = this.moduleFactory.create(moduleDefinition);
-      const object = module.create();
-
-      anchorGroup.add(object);
+      module.attach(anchorGroup);
+      return module;
     });
   }
 }

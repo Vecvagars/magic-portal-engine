@@ -1,11 +1,16 @@
-import { DoorwayPortal } from "../portal/DoorwayPortal.js";
+import { PortalModule } from "../modules/PortalModule.js";
 
 export class ModuleFactory {
   create(moduleDefinition) {
-    if (moduleDefinition.type === "portal") {
-      return new DoorwayPortal(moduleDefinition.config);
-    }
+    switch (moduleDefinition.type) {
+      case "portal": {
+        const module = new PortalModule(moduleDefinition.config);
+        module.initialize();
+        return module;
+      }
 
-    throw new Error(`Unknown module type: ${moduleDefinition.type}`);
+      default:
+        throw new Error(`Unknown module type: ${moduleDefinition.type}`);
+    }
   }
 }
