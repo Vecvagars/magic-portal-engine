@@ -31,8 +31,8 @@ export class MindARProvider extends TrackingProvider {
     this.anchor = this.mindarThree.addAnchor(0);
 
     const portalGroup = this.createPortalVisual();
-    portalGroup.position.set(0, 0, 0);
-    portalGroup.scale.set(0.45, 0.45, 0.45);
+    portalGroup.position.set(-1.25, 0.15, 0);
+    portalGroup.scale.set(1.15, 1.45, 1);
 
     this.anchor.group.add(portalGroup);
 
@@ -84,45 +84,91 @@ export class MindARProvider extends TrackingProvider {
 createPortalVisual() {
   const group = new THREE.Group();
 
-  const ringOuter = new THREE.Mesh(
-    new THREE.TorusGeometry(0.7, 0.04, 32, 180),
-    new THREE.MeshBasicMaterial({ color: 0xff9a00 })
-  );
-
-  const ringInner = new THREE.Mesh(
-    new THREE.TorusGeometry(0.58, 0.02, 32, 180),
-    new THREE.MeshBasicMaterial({ color: 0xffe0a0 })
-  );
+  const outerFrame = this.createPortalFrame(1.0, 1.42, 0xff9a00, 0.045);
+  const innerFrame = this.createPortalFrame(0.86, 1.22, 0xffe0a0, 0.022);
 
   const core = new THREE.Mesh(
-    new THREE.CircleGeometry(0.55, 96),
+    new THREE.PlaneGeometry(0.82, 1.18),
     new THREE.MeshBasicMaterial({
       color: 0x080018,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.86,
       side: THREE.DoubleSide,
     })
   );
 
-  core.position.z = -0.01;
+  core.position.z = -0.02;
 
-  const particles = this.createPortalParticles(450);
+  const particles = this.createRectPortalParticles(700, 1.08, 1.5);
 
-  group.add(core, ringOuter, ringInner, particles);
+  group.add(core, outerFrame, innerFrame, particles);
 
   return group;
 }
 
-createPortalParticles(count) {
+createPortalFrame(width, height, color, thickness) {
+  const group = new THREE.Group();
+
+  const material = new THREE.MeshBasicMaterial({
+    color,
+    transparent: true,
+    opacity: 0.95,
+  });
+
+  const top = new THREE.Mesh(
+    new THREE.BoxGeometry(width, thickness, thickness),
+    material
+  );
+  top.position.y = height / 2;
+
+  const bottom = new THREE.Mesh(
+    new THREE.BoxGeometry(width, thickness, thickness),
+    material
+  );
+  bottom.position.y = -height / 2;
+
+  const left = new THREE.Mesh(
+    new THREE.BoxGeometry(thickness, height, thickness),
+    material
+  );
+  left.position.x = -width / 2;
+
+  const right = new THREE.Mesh(
+    new THREE.BoxGeometry(thickness, height, thickness),
+    material
+  );
+  right.position.x = width / 2;
+
+  group.add(top, bottom, left, right);
+
+  return group;
+}
+
+createRectPortalParticles(count, width, height) {
   const geometry = new THREE.BufferGeometry();
   const positions = new Float32Array(count * 3);
 
   for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const radius = 0.62 + Math.random() * 0.28;
+    const side = Math.floor(Math.random() * 4);
+    let x = 0;
+    let y = 0;
 
-    positions[i * 3] = Math.cos(angle) * radius;
-    positions[i * 3 + 1] = Math.sin(angle) * radius;
+    if (side === 0) {
+      x = (Math.random() - 0.5) * width;
+      y = height / 2;
+    } else if (side === 1) {
+      x = (Math.random() - 0.5) * width;
+      y = -height / 2;
+    } else if (side === 2) {
+      x = -width / 2;
+      y = (Math.random() - 0.5) * height;
+    } else {
+      x = width / 2;
+      y = (Math.random() - 0.5) * height;
+    }
+
+    positions[i * 3] = x + (Math.random() - 0.5) * 0.08;
+    positions[i * 3 + 1] = y + (Math.random() - 0.5) * 0.08;
     positions[i * 3 + 2] = (Math.random() - 0.5) * 0.15;
   }
 
@@ -138,6 +184,6 @@ createPortalParticles(count) {
       depthWrite: false,
     })
   );
-}  
+}
 
 }
