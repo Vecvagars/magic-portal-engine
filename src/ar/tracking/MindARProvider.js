@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { TrackingProvider } from "./TrackingProvider.js";
 import sceneDefinition from "../../projects/altum-doorway/scene.js";
 import { SceneLoader } from "../../engine/SceneLoader.js";
-import { ALTUM_DOORWAY_SCENE } from "../../projects/altum-doorway/scene.js";
 
 export class MindARProvider extends TrackingProvider {
   constructor() {
@@ -23,7 +22,7 @@ export class MindARProvider extends TrackingProvider {
 
     this.mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
-      imageTargetSrc: ALTUM_DOORWAY_SCENE.tracking.target,
+      imageTargetSrc: sceneDefinition.tracking.target,
     });
 
     const { scene } = this.mindarThree;
@@ -34,7 +33,6 @@ export class MindARProvider extends TrackingProvider {
     this.anchor = this.mindarThree.addAnchor(0);
 
     const sceneLoader = new SceneLoader(sceneDefinition);
-
     sceneLoader.attachTo(this.anchor.group);
 
     this.anchor.onTargetFound = () => {
