@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { TrackingProvider } from "./TrackingProvider.js";
-import { DoorwayPortal } from "../../portal/DoorwayPortal.js";
-import { ALTUM_DOORWAY_SCENE } from "../../projects/altum-doorway/scene.config.js";
+import sceneDefinition from "../../projects/altum-doorway/scene.js";
+import { SceneLoader } from "../../engine/SceneLoader.js";
+import { ALTUM_DOORWAY_SCENE } from "../../projects/altum-doorway/scene.js";
 
 export class MindARProvider extends TrackingProvider {
   constructor() {
@@ -32,13 +33,9 @@ export class MindARProvider extends TrackingProvider {
 
     this.anchor = this.mindarThree.addAnchor(0);
 
-    const portal = new DoorwayPortal(ALTUM_DOORWAY_SCENE.portal);
-    const portalGroup = portal.create();
+    const sceneLoader = new SceneLoader(sceneDefinition);
 
-    portalGroup.position.set(0, 0, 0);
-    portalGroup.scale.set(1, 1, 1);
-
-    this.anchor.group.add(portalGroup);
+    sceneLoader.attachTo(this.anchor.group);
 
     this.anchor.onTargetFound = () => {
       console.log("Target found");
