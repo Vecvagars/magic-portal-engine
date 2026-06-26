@@ -2,13 +2,14 @@ import { createCameraFeed } from "../camera/createCameraFeed.js";
 import { MindARProvider } from "./tracking/MindARProvider.js";
 
 export class ARManager {
-  constructor(root) {
-    this.root = root;
+  constructor(root, scene) {
+  this.root = root;
+  this.scene = scene;
 
-    this.camera = null;
-    this.trackingProvider = null;
-    this.status = null;
-  }
+  this.camera = null;
+  this.trackingProvider = null;
+  this.status = null;
+}
 
   initialize() {
     const video = this.root.querySelector("#camera-feed");
@@ -19,7 +20,7 @@ export class ARManager {
       status: this.status,
     });
 
-    this.trackingProvider = new MindARProvider();
+    this.trackingProvider = new MindARProvider(this.scene);
     this.trackingProvider.initialize();
 
     this.setStatus("Ready");

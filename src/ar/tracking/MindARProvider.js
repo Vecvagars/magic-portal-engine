@@ -1,16 +1,18 @@
 import * as THREE from "three";
 import { TrackingProvider } from "./TrackingProvider.js";
-import sceneDefinition from "../../projects/altum-doorway/scene.js";
 import { SceneLoader } from "../../engine/SceneLoader.js";
 
 export class MindARProvider extends TrackingProvider {
-  constructor() {
+  constructor(sceneDefinition) {
     super();
+
+    this.sceneDefinition = sceneDefinition;
 
     this.mindarThree = null;
     this.anchor = null;
     this.targetFoundCallback = null;
     this.targetLostCallback = null;
+    this.sceneLoader = null;
   }
 
   async initialize() {
@@ -22,7 +24,7 @@ export class MindARProvider extends TrackingProvider {
 
     this.mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
-      imageTargetSrc: sceneDefinition.tracking.target,
+      imageTargetSrc: this.sceneDefinition.tracking.target,
     });
 
     const { scene } = this.mindarThree;
@@ -32,8 +34,8 @@ export class MindARProvider extends TrackingProvider {
 
     this.anchor = this.mindarThree.addAnchor(0);
 
-    const sceneLoader = new SceneLoader(sceneDefinition);
-    sceneLoader.attachTo(this.anchor.group);
+    this.sceneLoader = new SceneLoader(this.sceneDefinition);
+    this.sceneLoader.attachTo(this.anchor.group);
 
     this.anchor.onTargetFound = () => {
       console.log("Target found");
@@ -59,15 +61,27 @@ export class MindARProvider extends TrackingProvider {
 
     await this.mindarThree.start();
 
+    this.sceneLoader?.start();
+
     const { renderer, scene, camera } = this.mindarThree;
 
+    let previousTime = performance.now();
+
     renderer.setAnimationLoop(() => {
+      const now = performance.now();
+      const delta = (now - previousTime) / 1000;
+      previousTime = now;
+
+      this.sceneLoader?.update(delta);
+
       renderer.render(scene, camera);
     });
   }
 
   async stop() {
     if (!this.mindarThree) return;
+
+    this.sceneLoader?.stop();
 
     await this.mindarThree.stop();
   }
