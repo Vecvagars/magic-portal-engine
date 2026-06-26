@@ -1,36 +1,23 @@
-import { createCameraFeed } from "../camera/createCameraFeed.js";
-import { MindARProvider } from "./tracking/MindARProvider.js";
+import { TrackingProviderFactory } from "../engine/TrackingProviderFactory.js";
 
 export class ARManager {
-  constructor(root, scene) {
-  this.root = root;
-  this.scene = scene;
+  constructor(root, sceneDefinition) {
+    this.root = root;
+    this.sceneDefinition = sceneDefinition;
 
-  this.camera = null;
-  this.trackingProvider = null;
-  this.status = null;
-}
+    this.trackingProvider = null;
+    this.status = null;
+  }
 
   initialize() {
-    const video = this.root.querySelector("#camera-feed");
     this.status = this.root.querySelector("#status");
 
-    this.camera = createCameraFeed({
-      video,
-      status: this.status,
-    });
+    const providerFactory = new TrackingProviderFactory();
+    this.trackingProvider = providerFactory.create(this.sceneDefinition);
 
-    this.trackingProvider = new MindARProvider(this.scene);
     this.trackingProvider.initialize();
 
     this.setStatus("Ready");
-  }
-
-  async startCamera() {
-    if (!this.camera) return;
-
-    this.setStatus("Starting camera...");
-    await this.camera.start();
   }
 
   async startTracking() {
@@ -47,6 +34,13 @@ export class ARManager {
       console.error(error);
       this.setStatus(`AR error: ${error.message}`);
     }
+  }
+
+  async stopTracking() {
+    if (!this.trackingProvider) return;
+
+    await this.trackingProvider.stop();
+    this.setStatus("AR stopped");
   }
 
   setStatus(message) {
