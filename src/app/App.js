@@ -20,7 +20,6 @@ export class App {
 
         <div class="buttons">
           <button id="startTracking">Start AR Experience</button>
-          <button id="openPortal">Open portal</button>
         </div>
 
         <div id="status">Camera not started</div>
@@ -30,12 +29,12 @@ export class App {
     this.ar = new ARManager(this.root);
     this.ar.initialize();
 
-    this.portal = new Portal(
-      this.root.querySelector("#canvas-container"),
-      this.root.querySelector("#openPortal")
-    );
+//    this.portal = new Portal(
+//      this.root.querySelector("#canvas-container"),
+//      this.root.querySelector("#openPortal")
+  //  );
 
-    await this.portal.initialize();
+//    await this.portal.initialize();
 
     this.root
       .querySelector("#startTracking")
