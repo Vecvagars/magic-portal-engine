@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { TrackingProvider } from "./TrackingProvider.js";
 import { SceneLoader } from "../../engine/SceneLoader.js";
-import { PoseFilter } from "../../engine/PoseFilter.js";
+import { TrackingPipeline } from "../../engine/tracking/TrackingPipeline.js";
+import { PoseFilter } from "../../engine/tracking/PoseFilter.js";
 
 export class MindARProvider extends TrackingProvider {
   constructor(sceneDefinition) {
@@ -9,9 +10,12 @@ export class MindARProvider extends TrackingProvider {
 
     this.sceneDefinition = sceneDefinition;
 
-    this.poseFilter = new PoseFilter({
-    smoothing: 0.18,
-    });
+    this.trackingPipeline = new TrackingPipeline();
+    this.trackingPipeline.add(
+      new PoseFilter({
+        smoothing: 0.18,
+      })
+    );
 
     this.mindarThree = null;
     this.anchor = null;
@@ -44,6 +48,8 @@ export class MindARProvider extends TrackingProvider {
 
     this.anchor.onTargetFound = () => {
       console.log("Target found");
+
+      this.trackingPipeline.reset();
 
       if (this.targetFoundCallback) {
         this.targetFoundCallback();
@@ -78,8 +84,8 @@ export class MindARProvider extends TrackingProvider {
       previousTime = now;
 
       this.sceneLoader?.update(delta);
+      this.trackingPipeline.apply(this.anchor.group);
 
-      this.poseFilter.apply(this.anchor.group);
       renderer.render(scene, camera);
     });
   }
@@ -88,7 +94,6 @@ export class MindARProvider extends TrackingProvider {
     if (!this.mindarThree) return;
 
     this.sceneLoader?.stop();
-
     await this.mindarThree.stop();
   }
 
