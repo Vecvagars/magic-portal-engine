@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { TrackingProvider } from "./TrackingProvider.js";
+import { DoorwayPortal } from "../../portal/DoorwayPortal.js";
 
 export class MindARProvider extends TrackingProvider {
   constructor() {
@@ -30,7 +31,8 @@ export class MindARProvider extends TrackingProvider {
 
     this.anchor = this.mindarThree.addAnchor(0);
 
-    const portalGroup = this.createDoorPortalVisual();
+    const portal = new DoorwayPortal();
+    const portalGroup = portal.create();
     portalGroup.position.set(0, 0, 0);
     portalGroup.scale.set(1, 1, 1);
 
