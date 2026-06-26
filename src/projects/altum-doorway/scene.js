@@ -1,7 +1,21 @@
 export default {
   tracking: {
     provider: "mindar",
-    target: "/assets/targets/doorway-arch-far.mind",
+
+    config: {
+      target: "/assets/targets/doorway-arch-far.mind",
+    },
+
+    pipeline: {
+      filters: [
+        {
+          type: "pose",
+          config: {
+            smoothing: 0.18,
+          },
+        },
+      ],
+    },
   },
 
   modules: [

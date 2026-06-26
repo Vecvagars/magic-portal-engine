@@ -33,7 +33,7 @@ export class MindARProvider extends TrackingProvider {
 
     this.mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
-      imageTargetSrc: this.sceneDefinition.tracking.target,
+      imageTargetSrc: this.sceneDefinition.tracking.config.target,
     });
 
     const { scene } = this.mindarThree;
