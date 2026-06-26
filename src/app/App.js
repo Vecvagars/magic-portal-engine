@@ -1,10 +1,11 @@
 import { ARManager } from "../ar/ARManager.js";
-import { createPortalScene } from "../portal/createPortalScene.js";
+import { Portal } from "../portal/Portal.js";
 
 export class App {
   constructor(root) {
     this.root = root;
     this.ar = null;
+    this.portal = null;
   }
 
   async start() {
@@ -19,6 +20,7 @@ export class App {
 
         <div class="buttons">
           <button id="startCamera">Start camera</button>
+          <button id="startTracking">Start tracking</button>
           <button id="openPortal">Open portal</button>
         </div>
 
@@ -29,10 +31,12 @@ export class App {
     this.ar = new ARManager(this.root);
     this.ar.initialize();
 
-    createPortalScene({
-      container: this.root.querySelector("#canvas-container"),
-      button: this.root.querySelector("#openPortal"),
-    });
+    this.portal = new Portal(
+      this.root.querySelector("#canvas-container"),
+      this.root.querySelector("#openPortal")
+    );
+
+    await this.portal.initialize();
 
     this.root
       .querySelector("#startCamera")

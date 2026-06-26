@@ -32,14 +32,28 @@ export function createPortalScene({ container, button }) {
   scene.add(point)
 
   let isOpen = true
+  let animationFrameId = null
 
-  button.addEventListener('click', () => {
-    isOpen = !isOpen
-    button.textContent = isOpen ? 'Close portal' : 'Open portal'
-  })
+  function open() {
+    isOpen = true
+    if (button) button.textContent = 'Close portal'
+  }
+
+  function close() {
+    isOpen = false
+    if (button) button.textContent = 'Open portal'
+  }
+
+  function toggle() {
+    if (isOpen) {
+      close()
+    } else {
+      open()
+    }
+  }
 
   function animate() {
-    requestAnimationFrame(animate)
+    animationFrameId = requestAnimationFrame(animate)
 
     const t = performance.now() * 0.001
     portal.update(t, isOpen)
@@ -47,13 +61,44 @@ export function createPortalScene({ container, button }) {
     renderer.render(scene, camera)
   }
 
-  animate()
-
-  window.addEventListener('resize', () => {
+  function handleResize() {
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
     renderer.setSize(window.innerWidth, window.innerHeight)
-  })
+  }
+
+  function destroy() {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
+    }
+
+    window.removeEventListener('resize', handleResize)
+
+    if (button) {
+      button.removeEventListener('click', toggle)
+    }
+
+    renderer.dispose()
+
+    if (renderer.domElement && renderer.domElement.parentNode) {
+      renderer.domElement.parentNode.removeChild(renderer.domElement)
+    }
+  }
+
+  if (button) {
+    button.textContent = 'Close portal'
+    button.addEventListener('click', toggle)
+  }
+
+  window.addEventListener('resize', handleResize)
+  animate()
+
+  return {
+    open,
+    close,
+    toggle,
+    destroy,
+  }
 }
 
 function createPortal() {
