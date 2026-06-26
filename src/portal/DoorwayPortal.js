@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { DOORWAY_CONFIG } from "../config/DoorwayConfig.js";
 
 export class DoorwayPortal {
   create() {
