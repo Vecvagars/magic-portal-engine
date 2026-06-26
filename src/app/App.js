@@ -1,10 +1,9 @@
-import { ARManager } from "../ar/ARManager.js";
-import { Portal } from "../portal/Portal.js";
+import { MagicNebulaEngine } from "../engine/MagicNebulaEngine.js";
 
 export class App {
   constructor(root) {
     this.root = root;
-    this.ar = null;
+    this.engine = null;
     this.portal = null;
   }
 
@@ -25,15 +24,8 @@ export class App {
       </div>
     `
 
-    this.ar = new ARManager(this.root);
-    this.ar.initialize();
-
-//    this.portal = new Portal(
-//      this.root.querySelector("#canvas-container"),
-//      this.root.querySelector("#openPortal")
-  //  );
-
-//    await this.portal.initialize();
+    this.engine = new MagicNebulaEngine(this.root);
+    await this.engine.initialize();
 
     this.root
       .querySelector("#startTracking")
@@ -43,7 +35,7 @@ export class App {
 
         console.log("START AR TEST CLICKED");
 
-        await this.ar.startTracking();
+        await this.engine.startTracking();
       });
   }
 }
