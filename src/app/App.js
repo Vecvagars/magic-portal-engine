@@ -1,9 +1,10 @@
-import { createCameraFeed } from "../camera/createCameraFeed.js";
+import { ARManager } from "../ar/ARManager.js";
 import { createPortalScene } from "../portal/createPortalScene.js";
 
 export class App {
   constructor(root) {
     this.root = root;
+    this.ar = null;
   }
 
   async start() {
@@ -25,13 +26,8 @@ export class App {
       </div>
     `;
 
-    const status = this.root.querySelector("#status");
-    const video = this.root.querySelector("#camera-feed");
-
-    const cameraFeed = createCameraFeed({
-      video,
-      status,
-    });
+    this.ar = new ARManager(this.root);
+    this.ar.initialize();
 
     createPortalScene({
       container: this.root.querySelector("#canvas-container"),
@@ -41,7 +37,7 @@ export class App {
     this.root
       .querySelector("#startCamera")
       .addEventListener("click", async () => {
-        await cameraFeed.start();
+        await this.ar.startCamera();
       });
   }
 }
