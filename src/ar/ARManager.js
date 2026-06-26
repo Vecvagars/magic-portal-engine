@@ -36,18 +36,19 @@ export class ARManager {
     console.log("Start tracking button pressed");
     this.setStatus("Start tracking button pressed");
 
-    if (!this.trackingProvider) return;
+    if (!this.trackingProvider) {
+      this.setStatus("Tracking provider missing");
+      return;
+    }
 
-    this.setStatus("Starting tracking...");
-    await this.trackingProvider.start();
-    this.setStatus("Tracking started");
-  }
-
-  async stopTracking() {
-    if (!this.trackingProvider) return;
-
-    await this.trackingProvider.stop();
-    this.setStatus("Tracking stopped");
+    try {
+      this.setStatus("Starting tracking...");
+      await this.trackingProvider.start();
+      this.setStatus("Tracking started");
+    } catch (error) {
+      console.error(error);
+      this.setStatus(`Tracking error: ${error.message}`);
+    }
   }
 
   setStatus(message) {
