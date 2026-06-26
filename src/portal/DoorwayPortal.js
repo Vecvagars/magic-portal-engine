@@ -7,28 +7,39 @@ export class DoorwayPortal {
   create() {
     const group = new THREE.Group();
 
-    const width = DOORWAY_CONFIG.width;
-    const height = DOORWAY_CONFIG.height;
-    const depth = DOORWAY_CONFIG.depth;
-    const thickness = DOORWAY_CONFIG.frameThickness;
+    const config = DOORWAY_CONFIG;
+
+    const frameWidth = config.width - config.frameInset * 2;
+    const frameHeight = config.height - config.frameInset * 2;
+
+    const tunnelWidth = config.width - config.tunnelInset * 2;
+    const tunnelHeight = config.height - config.tunnelInset * 2;
 
     const tunnel = new TunnelGeometry().create({
-      width: width * 0.82,
-      height: height * 0.82,
-      depth,
+      width: tunnelWidth,
+      height: tunnelHeight,
+      depth: config.depth,
     });
 
-    tunnel.position.z = -0.02;
+    tunnel.position.z = -0.04;
 
-    const outerFrame = new FrameGeometry().create({
-      width: width * 0.86,
-      height: height * 0.86,
-      thickness,
+    const frame = new FrameGeometry().create({
+      width: frameWidth,
+      height: frameHeight,
+      thickness: config.frameThickness,
     });
 
-    outerFrame.position.z = 0.02;
+    frame.position.z = 0.02;
 
-    group.add(tunnel, outerFrame);
+    group.add(tunnel, frame);
+
+    group.position.set(
+      config.offset.x,
+      config.offset.y,
+      config.offset.z
+    );
+
+    group.scale.setScalar(config.scale);
 
     return group;
   }

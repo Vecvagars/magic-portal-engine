@@ -3,7 +3,10 @@ export const DOORWAY_CONFIG = {
   height: 2.1,
   depth: 0.4,
 
-  frameThickness: 0.055,
+  frameInset: 0.10,
+  frameThickness: 0.035,
+
+  tunnelInset: 0.16,
 
   offset: {
     x: 0,
