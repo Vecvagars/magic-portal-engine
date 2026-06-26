@@ -19,7 +19,7 @@ export class MindARProvider extends TrackingProvider {
     const { MindARThree } = module;
 
     this.mindarThree = new MindARThree({
-      container: document.body,
+      container: document.querySelector("#ar-container"),
       imageTargetSrc: "/assets/targets/altum-poster.mind",
     });
 

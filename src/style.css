@@ -96,3 +96,24 @@ button:active {
   font-size: 13px;
   opacity: 0.82;
 }
+
+#ar-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+#ar-container video,
+#ar-container canvas {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.ui {
+  z-index: 10;
+}

@@ -10,8 +10,7 @@ export class App {
 
   async start() {
     this.root.innerHTML = `
-      <video id="camera-feed" autoplay playsinline muted></video>
-      <div id="canvas-container"></div>
+      <<div id="ar-container"></div>
 
       <div class="ui">
         <div class="badge">Magic Nebula</div>
@@ -24,7 +23,7 @@ export class App {
 
         <div id="status">Camera not started</div>
       </div>
-    `;
+    `
 
     this.ar = new ARManager(this.root);
     this.ar.initialize();
