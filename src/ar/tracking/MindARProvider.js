@@ -1,12 +1,17 @@
 import * as THREE from "three";
 import { TrackingProvider } from "./TrackingProvider.js";
 import { SceneLoader } from "../../engine/SceneLoader.js";
+import { PoseFilter } from "../../engine/PoseFilter.js";
 
 export class MindARProvider extends TrackingProvider {
   constructor(sceneDefinition) {
     super();
 
     this.sceneDefinition = sceneDefinition;
+
+    this.poseFilter = new PoseFilter({
+    smoothing: 0.18,
+    });
 
     this.mindarThree = null;
     this.anchor = null;
@@ -74,6 +79,7 @@ export class MindARProvider extends TrackingProvider {
 
       this.sceneLoader?.update(delta);
 
+      this.poseFilter.apply(this.anchor.group);
       renderer.render(scene, camera);
     });
   }
