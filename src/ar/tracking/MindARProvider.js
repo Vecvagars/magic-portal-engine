@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { TrackingProvider } from "./TrackingProvider.js";
 import { SceneLoader } from "../../engine/SceneLoader.js";
 import { TrackingPipeline } from "../../engine/tracking/TrackingPipeline.js";
-import { PoseFilter } from "../../engine/tracking/PoseFilter.js";
+import { TrackingFilterFactory } from "../../engine/tracking/TrackingFilterFactory.js";
 
 export class MindARProvider extends TrackingProvider {
   constructor(sceneDefinition) {
@@ -10,18 +10,14 @@ export class MindARProvider extends TrackingProvider {
 
     this.sceneDefinition = sceneDefinition;
 
-    this.trackingPipeline = new TrackingPipeline();
-    this.trackingPipeline.add(
-      new PoseFilter({
-        smoothing: 0.18,
-      })
-    );
-
     this.mindarThree = null;
     this.anchor = null;
+
+    this.sceneLoader = null;
+    this.trackingPipeline = null;
+
     this.targetFoundCallback = null;
     this.targetLostCallback = null;
-    this.sceneLoader = null;
   }
 
   async initialize() {
@@ -38,33 +34,51 @@ export class MindARProvider extends TrackingProvider {
 
     const { scene } = this.mindarThree;
 
-    const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
-    scene.add(light);
+    scene.add(
+      new THREE.HemisphereLight(
+        0xffffff,
+        0xbbbbff,
+        1
+      )
+    );
 
     this.anchor = this.mindarThree.addAnchor(0);
 
     this.sceneLoader = new SceneLoader(this.sceneDefinition);
     this.sceneLoader.attachTo(this.anchor.group);
 
+    this.initializeTrackingPipeline();
+
     this.anchor.onTargetFound = () => {
       console.log("Target found");
 
       this.trackingPipeline.reset();
 
-      if (this.targetFoundCallback) {
-        this.targetFoundCallback();
-      }
+      this.targetFoundCallback?.();
     };
 
     this.anchor.onTargetLost = () => {
       console.log("Target lost");
 
-      if (this.targetLostCallback) {
-        this.targetLostCallback();
-      }
+      this.targetLostCallback?.();
     };
 
-    console.log("MindAR initialized through ESM CDN");
+    console.log("MindAR initialized");
+  }
+
+  initializeTrackingPipeline() {
+    this.trackingPipeline = new TrackingPipeline();
+
+    const filterFactory = new TrackingFilterFactory();
+
+    const filters =
+      this.sceneDefinition.tracking.pipeline?.filters || [];
+
+    filters.forEach((filterDefinition) => {
+      this.trackingPipeline.add(
+        filterFactory.create(filterDefinition)
+      );
+    });
   }
 
   async start() {
@@ -84,7 +98,8 @@ export class MindARProvider extends TrackingProvider {
       previousTime = now;
 
       this.sceneLoader?.update(delta);
-      this.trackingPipeline.apply(this.anchor.group);
+
+      this.trackingPipeline?.apply(this.anchor.group);
 
       renderer.render(scene, camera);
     });
@@ -94,6 +109,7 @@ export class MindARProvider extends TrackingProvider {
     if (!this.mindarThree) return;
 
     this.sceneLoader?.stop();
+
     await this.mindarThree.stop();
   }
 
