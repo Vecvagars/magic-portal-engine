@@ -1,5 +1,5 @@
 import { Module } from "./Module.js";
-import { DoorwayPortal } from "../portal/DoorwayPortal.js";
+import { PortalFactory } from "../portal/PortalFactory.js";
 
 export class PortalModule extends Module {
   constructor(config) {
@@ -11,7 +11,8 @@ export class PortalModule extends Module {
   }
 
   initialize() {
-    this.portal = new DoorwayPortal(this.config);
+    const portalFactory = new PortalFactory();
+    this.portal = portalFactory.create(this.config);
   }
 
   attach(parent) {
