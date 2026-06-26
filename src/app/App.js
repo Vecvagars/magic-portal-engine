@@ -20,7 +20,7 @@ export class App {
 
         <div class="buttons">
           <button id="startCamera">Start camera</button>
-          <button id="startTracking">Start tracking</button>
+          <button id="startTracking">START AR TEST</button>
           <button id="openPortal">Open portal</button>
         </div>
 
@@ -42,6 +42,17 @@ export class App {
       .querySelector("#startCamera")
       .addEventListener("click", async () => {
         await this.ar.startCamera();
+      });
+
+    this.root
+      .querySelector("#startTracking")
+      .addEventListener("click", async () => {
+        const status = this.root.querySelector("#status");
+        status.textContent = "START AR TEST CLICKED";
+
+        console.log("START AR TEST CLICKED");
+
+        await this.ar.startTracking();
       });
   }
 }
