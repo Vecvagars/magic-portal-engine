@@ -30,11 +30,141 @@ export class MindARProvider extends TrackingProvider {
 
     this.anchor = this.mindarThree.addAnchor(0);
 
-    const portalGroup = this.createPortalVisual();
-    portalGroup.position.set(0, 0, 0);
-    portalGroup.scale.set(1, 1, 1);
+    createDoorPortalVisual() {
+      const group = new THREE.Group();
 
-    this.anchor.group.add(portalGroup);
+      const width = 1.5;
+      const height = 2.1;
+      const depth = 0.4;
+      const thickness = 0.055;
+
+      const fireMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff8a00,
+        transparent: true,
+        opacity: 0.95,
+      });
+
+      const innerGlowMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffd47a,
+        transparent: true,
+        opacity: 0.75,
+      });
+
+      const spaceMaterial = new THREE.MeshBasicMaterial({
+        color: 0x090019,
+        transparent: true,
+        opacity: 0.88,
+        side: THREE.DoubleSide,
+      });
+
+      const backSpaceMaterial = new THREE.MeshBasicMaterial({
+        color: 0x17003d,
+        transparent: true,
+        opacity: 0.7,
+        side: THREE.DoubleSide,
+      });
+
+      const top = new THREE.Mesh(
+        new THREE.BoxGeometry(width, thickness, thickness),
+        fireMaterial
+      );
+      top.position.y = height / 2;
+
+      const bottom = new THREE.Mesh(
+        new THREE.BoxGeometry(width, thickness, thickness),
+        fireMaterial
+      );
+      bottom.position.y = -height / 2;
+
+      const left = new THREE.Mesh(
+        new THREE.BoxGeometry(thickness, height, thickness),
+        fireMaterial
+      );
+      left.position.x = -width / 2;
+
+      const right = new THREE.Mesh(
+        new THREE.BoxGeometry(thickness, height, thickness),
+        fireMaterial
+      );
+      right.position.x = width / 2;
+
+      const innerTop = new THREE.Mesh(
+        new THREE.BoxGeometry(width * 0.86, thickness * 0.55, thickness),
+        innerGlowMaterial
+      );
+      innerTop.position.y = height * 0.38;
+      innerTop.position.z = -0.03;
+
+      const innerBottom = innerTop.clone();
+      innerBottom.position.y = -height * 0.38;
+
+      const innerLeft = new THREE.Mesh(
+        new THREE.BoxGeometry(thickness * 0.55, height * 0.78, thickness),
+        innerGlowMaterial
+      );
+      innerLeft.position.x = -width * 0.43;
+      innerLeft.position.z = -0.03;
+
+      const innerRight = innerLeft.clone();
+      innerRight.position.x = width * 0.43;
+
+      const frontSpace = new THREE.Mesh(
+        new THREE.PlaneGeometry(width * 0.82, height * 0.76),
+        spaceMaterial
+      );
+      frontSpace.position.z = -0.04;
+
+      const backSpace = new THREE.Mesh(
+        new THREE.PlaneGeometry(width * 0.72, height * 0.66),
+        backSpaceMaterial
+      );
+      backSpace.position.z = -depth;
+
+      const sideLeft = new THREE.Mesh(
+        new THREE.PlaneGeometry(depth, height * 0.76),
+        backSpaceMaterial
+      );
+      sideLeft.position.x = -width * 0.41;
+      sideLeft.position.z = -depth / 2;
+      sideLeft.rotation.y = Math.PI / 2;
+
+      const sideRight = sideLeft.clone();
+      sideRight.position.x = width * 0.41;
+
+      const topDepth = new THREE.Mesh(
+        new THREE.PlaneGeometry(width * 0.82, depth),
+        backSpaceMaterial
+      );
+      topDepth.position.y = height * 0.38;
+      topDepth.position.z = -depth / 2;
+      topDepth.rotation.x = Math.PI / 2;
+
+      const bottomDepth = topDepth.clone();
+      bottomDepth.position.y = -height * 0.38;
+
+      const particles = this.createPortalParticles(900);
+      particles.scale.set(1.15, 1.55, 1);
+
+      group.add(
+        backSpace,
+        sideLeft,
+        sideRight,
+        topDepth,
+        bottomDepth,
+        frontSpace,
+        top,
+        bottom,
+        left,
+        right,
+        innerTop,
+        innerBottom,
+        innerLeft,
+        innerRight,
+        particles
+      );
+
+      return group;
+    }
 
     this.anchor.onTargetFound = () => {
       console.log("Target found");
