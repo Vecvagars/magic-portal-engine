@@ -15,6 +15,16 @@ export const PORTAL_THEMES = {
         }, 
     },
 
+    energyFlow: {
+        enabled: true,
+        width: 1.42,
+        height: 1.98,
+        z: 0.055,
+        countPerSide: 10,
+        color: 0xffd28a,
+        size: 0.025,
+        speed: 0.32,
+    },
 
     glow: {
       enabled: true,
