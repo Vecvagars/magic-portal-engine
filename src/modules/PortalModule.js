@@ -21,10 +21,12 @@ export class PortalModule extends Module {
   }
 
   start() {
-    console.log("PortalModule started");
+    this.portal?.start();
   }
 
   update(delta) {
+    this.portal?.update(delta);
+
     if (!this.object) return;
 
     this.elapsedTime += delta;
@@ -34,6 +36,12 @@ export class PortalModule extends Module {
   }
 
   stop() {
-    console.log("PortalModule stopped");
+    this.portal?.stop();
+  }
+
+  destroy() {
+    this.portal?.destroy();
+    this.portal = null;
+    this.object = null;
   }
 }

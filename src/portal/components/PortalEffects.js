@@ -1,16 +1,20 @@
 import * as THREE from "three";
+import { Component } from "./Component.js";
 
-export class PortalEffects {
+export class PortalEffects extends Component {
   constructor(config = {}) {
-    this.config = config;
+    super(config);
   }
 
   create() {
-    const group = new THREE.Group();
+    this.object = new THREE.Group();
 
-    // Placeholder for future effects:
-    // particles, glow, fog, distortion, shader uniforms, etc.
+    return this.object;
+  }
 
-    return group;
+  update(delta) {
+    if (!this.object) return;
+
+    this.object.rotation.z += delta * 0.2;
   }
 }
