@@ -20,7 +20,7 @@ export default {
 
   assets: {
     textures: {
-      portalGlow: "/assets/textures/portal/glow.png",
+      portalGlow: "/assets/textures/portal/glow-v2.png",
       portalNoise: "/assets/textures/portal/noise.png",
     },
   },
