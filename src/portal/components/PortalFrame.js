@@ -1,19 +1,20 @@
+import { Component } from "./Component.js";
 import { FrameGeometry } from "../FrameGeometry.js";
 
-export class PortalFrame {
+export class PortalFrame extends Component {
   constructor(config) {
-    this.config = config;
+    super(config);
   }
 
   create() {
-    const frame = new FrameGeometry().create({
+    this.object = new FrameGeometry().create({
       width: this.config.width,
       height: this.config.height,
       thickness: this.config.thickness,
     });
 
-    frame.position.z = this.config.z ?? 0;
+    this.object.position.z = this.config.z ?? 0;
 
-    return frame;
+    return this.object;
   }
 }

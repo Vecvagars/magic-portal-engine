@@ -1,19 +1,20 @@
+import { Component } from "./Component.js";
 import { TunnelGeometry } from "../TunnelGeometry.js";
 
-export class PortalTunnel {
+export class PortalTunnel extends Component {
   constructor(config) {
-    this.config = config;
+    super(config);
   }
 
   create() {
-    const tunnel = new TunnelGeometry().create({
+    this.object = new TunnelGeometry().create({
       width: this.config.width,
       height: this.config.height,
       depth: this.config.depth,
     });
 
-    tunnel.position.z = this.config.z ?? 0;
+    this.object.position.z = this.config.z ?? 0;
 
-    return tunnel;
+    return this.object;
   }
 }
