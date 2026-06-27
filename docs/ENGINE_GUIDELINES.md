@@ -206,6 +206,57 @@ If not, redesign it.
 
 ⸻
 
+# Design Language
+
+Magic Nebula Engine uses a lightweight Entity → Component → Primitive model.
+
+```text
+Entity
+  ↓
+Component
+  ↓
+Primitive
+
+Entity
+
+Entities coordinate components.
+
+Examples:
+
+* DoorwayPortal
+* Avatar
+* Product
+* NavigationMarker
+
+Entities should not contain low-level rendering logic.
+
+Component
+
+Components implement a specific part of an entity.
+
+Examples:
+
+* PortalFrame
+* PortalTunnel
+* PortalSurface
+* PortalEffects
+
+Primitive
+
+Primitives implement rendering details.
+
+Examples:
+
+* Geometry
+* Material
+* Texture
+* Shader
+
+This model should stay lightweight.
+Magic Nebula Engine should not become a full ECS unless there is a clear need.
+
+
+
 Engine Principles
 
 1. Runtime is reusable.
