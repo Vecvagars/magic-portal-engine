@@ -230,3 +230,21 @@ engine.loadScene(scene);
 engine.start();
 
 without rewriting the Runtime.
+
+## Portal Runtime
+
+Portal is implemented as a reusable Runtime module.
+
+Current structure:
+
+```text
+PortalModule
+  ↓
+PortalFactory
+  ↓
+DoorwayPortal
+  ↓
+PortalFrame
+PortalTunnel
+PortalSurface
+PortalEffects
