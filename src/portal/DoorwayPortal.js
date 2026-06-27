@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { TunnelGeometry } from "./TunnelGeometry.js";
 import { PortalFrame } from "./components/PortalFrame.js";
+import { PortalTunnel } from "./components/PortalTunnel.js";
 
 export class DoorwayPortal {
   constructor(config) {
@@ -18,13 +18,12 @@ export class DoorwayPortal {
     const tunnelWidth = config.width - config.tunnelInset * 2;
     const tunnelHeight = config.height - config.tunnelInset * 2;
 
-    const tunnel = new TunnelGeometry().create({
+    const tunnel = new PortalTunnel({
       width: tunnelWidth,
       height: tunnelHeight,
       depth: config.depth,
-    });
-
-    tunnel.position.z = -0.04;
+      z: -0.04,
+    }).create();
 
     const frame = new PortalFrame({
       width: frameWidth,
