@@ -1,35 +1,73 @@
 import fs from "fs";
 import { createCanvas } from "canvas";
 
-fs.mkdirSync("public/assets/textures/portal", { recursive: true });
+const outputDir = "public/assets/textures/portal";
+fs.mkdirSync(outputDir, { recursive: true });
 
-function createGlowTexture() {
-  const size = 512;
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function roundedRectDistance(x, y, width, height, radius) {
+  const qx = Math.abs(x) - width / 2 + radius;
+  const qy = Math.abs(y) - height / 2 + radius;
+
+  const outsideX = Math.max(qx, 0);
+  const outsideY = Math.max(qy, 0);
+  const outsideDistance = Math.sqrt(outsideX * outsideX + outsideY * outsideY);
+  const insideDistance = Math.min(Math.max(qx, qy), 0);
+
+  return outsideDistance + insideDistance - radius;
+}
+
+function createRectangularGlowTexture() {
+  const size = 1024;
   const canvas = createCanvas(size, size);
   const ctx = canvas.getContext("2d");
+  const imageData = ctx.createImageData(size, size);
 
-  const center = size / 2;
+  const rectWidth = size * 0.66;
+  const rectHeight = size * 0.86;
+  const radius = size * 0.035;
+  const glowWidth = size * 0.12;
+  const innerFade = size * 0.028;
 
-  const gradient = ctx.createRadialGradient(
-    center,
-    center,
-    size * 0.18,
-    center,
-    center,
-    size * 0.5
-  );
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const px = x - size / 2;
+      const py = y - size / 2;
+      const distance = roundedRectDistance(px, py, rectWidth, rectHeight, radius);
 
-  gradient.addColorStop(0.0, "rgba(255,255,255,0)");
-  gradient.addColorStop(0.45, "rgba(255,255,255,0.08)");
-  gradient.addColorStop(0.68, "rgba(255,255,255,0.7)");
-  gradient.addColorStop(0.86, "rgba(255,255,255,0.22)");
-  gradient.addColorStop(1.0, "rgba(255,255,255,0)");
+      const outsideGlow =
+        distance > 0
+          ? 1 - clamp(distance / glowWidth, 0, 1)
+          : 0;
 
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, size, size);
+      const edgeGlow = 1 - clamp(Math.abs(distance) / innerFade, 0, 1);
+
+      const insideSoftness =
+        distance < 0
+          ? 1 - clamp(Math.abs(distance) / (size * 0.18), 0, 1)
+          : 0;
+
+      const alpha = Math.max(
+        outsideGlow * 0.55,
+        edgeGlow * 0.95,
+        insideSoftness * 0.08
+      );
+
+      const index = (y * size + x) * 4;
+      imageData.data[index] = 255;
+      imageData.data[index + 1] = 255;
+      imageData.data[index + 2] = 255;
+      imageData.data[index + 3] = Math.floor(clamp(alpha, 0, 1) * 255);
+    }
+  }
+
+  ctx.putImageData(imageData, 0, 0);
 
   fs.writeFileSync(
-    "public/assets/textures/portal/glow.png",
+    `${outputDir}/glow.png`,
     canvas.toBuffer("image/png")
   );
 }
@@ -41,7 +79,7 @@ function createNoiseTexture() {
   const imageData = ctx.createImageData(size, size);
 
   for (let i = 0; i < imageData.data.length; i += 4) {
-    const value = Math.floor(Math.random() * 255);
+    const value = Math.floor(90 + Math.random() * 120);
 
     imageData.data[i] = value;
     imageData.data[i + 1] = value;
@@ -52,12 +90,12 @@ function createNoiseTexture() {
   ctx.putImageData(imageData, 0, 0);
 
   fs.writeFileSync(
-    "public/assets/textures/portal/noise.png",
+    `${outputDir}/noise.png`,
     canvas.toBuffer("image/png")
   );
 }
 
-createGlowTexture();
+createRectangularGlowTexture();
 createNoiseTexture();
 
-console.log("Portal textures generated.");
+console.log("Portal texture pack generated.");
