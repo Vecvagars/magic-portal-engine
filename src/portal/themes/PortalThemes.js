@@ -26,8 +26,20 @@ export const PORTAL_THEMES = {
     },
 
     surface: {
-      color: 0x050010,
-      opacity: 0.62,
+    color: 0x050010,
+    opacity: 0.68,
+
+    texture: {
+        key: "portalNoise",
+        repeat: {
+        x: 1.6,
+        y: 2.4,
+        },
+        speed: {
+        x: 0.012,
+        y: 0.018,
+        },
+    },
     },
 
     tunnel: {
