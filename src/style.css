@@ -117,3 +117,18 @@ button:active {
 .ui {
   z-index: 10;
 }
+
+#ar-container {
+  pointer-events: none;
+}
+
+#ar-container video,
+#ar-container canvas {
+  pointer-events: none;
+}
+
+.ui {
+  position: fixed;
+  z-index: 100;
+  pointer-events: auto;
+}
