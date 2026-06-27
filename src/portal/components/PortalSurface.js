@@ -1,8 +1,9 @@
 import * as THREE from "three";
+import { Component } from "./Component.js";
 
-export class PortalSurface {
+export class PortalSurface extends Component {
   constructor(config) {
-    this.config = config;
+    super(config);
   }
 
   create() {
@@ -14,17 +15,17 @@ export class PortalSurface {
       depthWrite: false,
     });
 
-    const surface = new THREE.Mesh(
+    this.object = new THREE.Mesh(
       new THREE.PlaneGeometry(this.config.width, this.config.height),
       material
     );
 
-    surface.position.set(
+    this.object.position.set(
       this.config.x ?? 0,
       this.config.y ?? 0,
       this.config.z ?? 0
     );
 
-    return surface;
+    return this.object;
   }
 }
