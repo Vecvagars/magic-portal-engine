@@ -18,6 +18,13 @@ export default {
     },
   },
 
+  assets: {
+    textures: {
+      portalGlow: "/assets/textures/portal-glow.png",
+      portalNoise: "/assets/textures/portal-noise.png",
+    },
+  },
+
   modules: [
     {
       type: "portal",
