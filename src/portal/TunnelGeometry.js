@@ -1,12 +1,10 @@
 import * as THREE from "three";
-import { PortalSurface } from "./components/PortalSurface.js";
 
 export class TunnelGeometry {
   create({ width, height, depth, appearance = {} }) {
     const group = new THREE.Group();
 
     const tunnelAppearance = appearance.tunnel || {};
-    const surfaceAppearance = appearance.surface || {};
 
     const wallMaterial = new THREE.MeshBasicMaterial({
       color: tunnelAppearance.color ?? 0x110021,
@@ -44,15 +42,7 @@ export class TunnelGeometry {
     floor.position.set(0, -height / 2, -depth / 2);
     floor.rotation.x = -Math.PI / 2;
 
-    const backPlane = new PortalSurface({
-      width,
-      height,
-      z: -depth,
-      color: surfaceAppearance.color ?? 0x050010,
-      opacity: surfaceAppearance.opacity ?? 0.62,
-    }).create();
-
-    group.add(leftWall, rightWall, ceiling, floor, backPlane);
+    group.add(leftWall, rightWall, ceiling, floor);
 
     return group;
   }
