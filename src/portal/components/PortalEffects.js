@@ -2,8 +2,8 @@ import * as THREE from "three";
 import { Component } from "./Component.js";
 
 export class PortalEffects extends Component {
-  constructor(config = {}) {
-    super(config);
+  constructor(config = {}, context = null) {
+    super(config, context);
 
     this.elapsedTime = 0;
     this.particles = null;
@@ -14,7 +14,7 @@ export class PortalEffects extends Component {
     this.object = new THREE.Group();
 
     if (this.config?.glow?.enabled) {
-      this.glow = this.createGlow(this.config.glow);
+      this.glow = this.createSoftGlow(this.config.glow);
       this.object.add(this.glow);
     }
 
@@ -26,42 +26,63 @@ export class PortalEffects extends Component {
     return this.object;
   }
 
-  createGlow(config) {
-    const group = new THREE.Group();
+  createSoftGlow(config) {
+    const texture =
+      this.context?.assets?.getTexture("portalGlow") ||
+      this.createFallbackGlowTexture();
+
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
 
     const material = new THREE.MeshBasicMaterial({
+      map: texture,
       color: config.color ?? 0xff8a00,
       transparent: true,
       opacity: config.opacity ?? 0.32,
+      blending: THREE.AdditiveBlending,
       depthWrite: false,
+      side: THREE.DoubleSide,
     });
 
-    const width = config.width ?? 1.42;
-    const height = config.height ?? 1.98;
-    const thickness = config.thickness ?? 0.085;
-    const z = config.z ?? 0.018;
-
-    const top = new THREE.Mesh(
-      new THREE.BoxGeometry(width, thickness, thickness),
+    const glow = new THREE.Mesh(
+      new THREE.PlaneGeometry(config.width ?? 1.42, config.height ?? 1.98),
       material
     );
-    top.position.set(0, height / 2, z);
 
-    const bottom = top.clone();
-    bottom.position.y = -height / 2;
+    glow.position.z = config.z ?? 0.018;
 
-    const left = new THREE.Mesh(
-      new THREE.BoxGeometry(thickness, height, thickness),
-      material
+    return glow;
+  }
+
+  createFallbackGlowTexture() {
+    const size = 512;
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+
+    const ctx = canvas.getContext("2d");
+    const center = size / 2;
+
+    const gradient = ctx.createRadialGradient(
+      center,
+      center,
+      size * 0.18,
+      center,
+      center,
+      size * 0.48
     );
-    left.position.set(-width / 2, 0, z);
 
-    const right = left.clone();
-    right.position.x = width / 2;
+    gradient.addColorStop(0.0, "rgba(255,255,255,0)");
+    gradient.addColorStop(0.45, "rgba(255,255,255,0.12)");
+    gradient.addColorStop(0.68, "rgba(255,255,255,0.55)");
+    gradient.addColorStop(0.84, "rgba(255,255,255,0.18)");
+    gradient.addColorStop(1.0, "rgba(255,255,255,0)");
 
-    group.add(top, bottom, left, right);
+    ctx.clearRect(0, 0, size, size);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, size, size);
 
-    return group;
+    return new THREE.CanvasTexture(canvas);
   }
 
   createParticles(config) {
@@ -74,7 +95,6 @@ export class PortalEffects extends Component {
 
     for (let i = 0; i < count; i++) {
       const side = Math.floor(Math.random() * 4);
-
       let x = 0;
       let y = 0;
 
@@ -117,7 +137,7 @@ export class PortalEffects extends Component {
     this.elapsedTime += delta;
 
     if (this.glow) {
-      const pulse = 1 + Math.sin(this.elapsedTime * 2.5) * 0.025;
+      const pulse = 1 + Math.sin(this.elapsedTime * 2.5) * 0.035;
       this.glow.scale.setScalar(pulse);
     }
 

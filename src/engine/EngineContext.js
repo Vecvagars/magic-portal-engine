@@ -1,7 +1,5 @@
 export class EngineContext {
-  constructor({
-    assets,
-  }) {
+  constructor({ assets }) {
     this.assets = assets;
   }
 }
