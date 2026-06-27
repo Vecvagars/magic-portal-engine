@@ -26,6 +26,7 @@ export class DoorwayPortal {
       height: tunnelHeight,
       depth: config.depth,
       z: -0.04,
+      appearance: config.appearance,
     });
 
     const frame = new PortalFrame({

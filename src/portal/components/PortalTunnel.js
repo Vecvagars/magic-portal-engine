@@ -11,6 +11,7 @@ export class PortalTunnel extends Component {
       width: this.config.width,
       height: this.config.height,
       depth: this.config.depth,
+      appearance: this.config.appearance,
     });
 
     this.object.position.z = this.config.z ?? 0;

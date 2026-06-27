@@ -24,6 +24,7 @@ export default {
 
       config: {
         variant: "doorway",
+        theme: "energy",
 
         width: 1.5,
         height: 2.1,
@@ -39,28 +40,6 @@ export default {
           x: 0,
           y: 0,
           z: 0,
-        },
-
-        effects: {
-          glow: {
-            enabled: true,
-            color: 0xff8a00,
-            opacity: 0.32,
-            width: 1.42,
-            height: 1.98,
-            thickness: 0.085,
-            z: 0.018,
-          },
-
-          particles: {
-            enabled: true,
-            count: 220,
-            width: 1.4,
-            height: 1.9,
-            color: 0xff8a00,
-            size: 0.015,
-            opacity: 0.75,
-          },
         },
       },
     },
