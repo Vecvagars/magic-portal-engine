@@ -40,6 +40,18 @@ export default {
           y: 0,
           z: 0,
         },
+
+        effects: {
+          particles: {
+            enabled: true,
+            count: 220,
+            width: 1.4,
+            height: 1.9,
+            color: 0xff8a00,
+            size: 0.015,
+            opacity: 0.75,
+          },
+        },
       },
     },
   ],
