@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { PortalFrame } from "./components/PortalFrame.js";
 import { PortalTunnel } from "./components/PortalTunnel.js";
+import { PortalEffects } from "./components/PortalEffects.js";
 
 export class DoorwayPortal {
   constructor(config) {
@@ -32,7 +33,9 @@ export class DoorwayPortal {
       z: 0.02,
     }).create();
 
-    group.add(tunnel, frame);
+    const effects = new PortalEffects(config.effects).create();
+
+    group.add(tunnel, frame, effects);
 
     group.position.set(
       config.offset.x,
