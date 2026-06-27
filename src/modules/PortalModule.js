@@ -2,17 +2,16 @@ import { Module } from "./Module.js";
 import { PortalFactory } from "../portal/PortalFactory.js";
 
 export class PortalModule extends Module {
-  constructor(config) {
-    super(config);
+  constructor(config, context) {
+    super(config, context);
 
     this.portal = null;
     this.object = null;
-    this.elapsedTime = 0;
   }
 
   initialize() {
     const portalFactory = new PortalFactory();
-    this.portal = portalFactory.create(this.config);
+    this.portal = portalFactory.create(this.config, this.context);
   }
 
   attach(parent) {
@@ -26,13 +25,6 @@ export class PortalModule extends Module {
 
   update(delta) {
     this.portal?.update(delta);
-
-    if (!this.object) return;
-
-    this.elapsedTime += delta;
-
-    const pulse = 1 + Math.sin(this.elapsedTime * 2.2) * 0.015;
-    this.object.scale.setScalar(this.config.scale * pulse);
   }
 
   stop() {

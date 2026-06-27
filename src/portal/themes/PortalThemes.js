@@ -5,6 +5,17 @@ export const PORTAL_THEMES = {
       opacity: 0.9,
     },
 
+    opening: {
+        enabled: true,
+        duration: 1.2,
+        startScale: {
+            x: 0.08,
+            y: 1.0,
+            z: 1.0,
+        }, 
+    },
+
+
     glow: {
       enabled: true,
       color: 0xff8a00,
@@ -26,26 +37,29 @@ export const PORTAL_THEMES = {
     },
 
     surface: {
-    color: 0x050010,
-    opacity: 0.68,
+        color: 0x050010,
+        opacity: 0.68,
 
-    texture: {
-        key: "portalNoise",
-        repeat: {
-        x: 1.6,
-        y: 2.4,
+        texture: {
+            key: "portalNoise",
+
+            repeat: {
+            x: 1.6,
+            y: 2.4,
+            },
+
+            speed: {
+            x: 0.012,
+            y: 0.018,
+            },
         },
-        speed: {
-        x: 0.012,
-        y: 0.018,
-        },
+
         pulse: {
-        enabled: true,
-        speed: 1.4,
-        strength: 0.08,
+            enabled: true,
+            speed: 1.4,
+            strength: 0.08,
         },
-    },
-    },
+        },
 
     tunnel: {
       color: 0x110021,
