@@ -39,6 +39,11 @@ export const PORTAL_THEMES = {
         x: 0.012,
         y: 0.018,
         },
+        pulse: {
+        enabled: true,
+        speed: 1.4,
+        strength: 0.08,
+        },
     },
     },
 
