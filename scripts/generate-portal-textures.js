@@ -29,8 +29,9 @@ function createRectangularGlowTexture() {
   const rectWidth = size * 0.66;
   const rectHeight = size * 0.86;
   const radius = size * 0.035;
-  const glowWidth = size * 0.12;
-  const innerFade = size * 0.028;
+  const outerGlowWidth = size * 0.11;
+  const innerGlowWidth = size * 0.055;
+  const edgeWidth = size * 0.022;
 
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
@@ -38,22 +39,22 @@ function createRectangularGlowTexture() {
       const py = y - size / 2;
       const distance = roundedRectDistance(px, py, rectWidth, rectHeight, radius);
 
+      const edge = 1 - clamp(Math.abs(distance) / edgeWidth, 0, 1);
+
       const outsideGlow =
         distance > 0
-          ? 1 - clamp(distance / glowWidth, 0, 1)
+          ? 1 - clamp(distance / outerGlowWidth, 0, 1)
           : 0;
 
-      const edgeGlow = 1 - clamp(Math.abs(distance) / innerFade, 0, 1);
-
-      const insideSoftness =
+      const insideGlow =
         distance < 0
-          ? 1 - clamp(Math.abs(distance) / (size * 0.18), 0, 1)
+          ? 1 - clamp(Math.abs(distance) / innerGlowWidth, 0, 1)
           : 0;
 
       const alpha = Math.max(
-        outsideGlow * 0.55,
-        edgeGlow * 0.95,
-        insideSoftness * 0.08
+        edge * 0.95,
+        outsideGlow * 0.42,
+        insideGlow * 0.22
       );
 
       const index = (y * size + x) * 4;
