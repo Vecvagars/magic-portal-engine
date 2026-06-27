@@ -42,6 +42,16 @@ export default {
         },
 
         effects: {
+          glow: {
+            enabled: true,
+            color: 0xff8a00,
+            opacity: 0.32,
+            width: 1.42,
+            height: 1.98,
+            thickness: 0.085,
+            z: 0.018,
+          },
+
           particles: {
             enabled: true,
             count: 220,

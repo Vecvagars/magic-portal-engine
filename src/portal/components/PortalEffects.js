@@ -4,12 +4,19 @@ import { Component } from "./Component.js";
 export class PortalEffects extends Component {
   constructor(config = {}) {
     super(config);
+
     this.elapsedTime = 0;
     this.particles = null;
+    this.glow = null;
   }
 
   create() {
     this.object = new THREE.Group();
+
+    if (this.config?.glow?.enabled) {
+      this.glow = this.createGlow(this.config.glow);
+      this.object.add(this.glow);
+    }
 
     if (this.config?.particles?.enabled) {
       this.particles = this.createParticles(this.config.particles);
@@ -17,6 +24,44 @@ export class PortalEffects extends Component {
     }
 
     return this.object;
+  }
+
+  createGlow(config) {
+    const group = new THREE.Group();
+
+    const material = new THREE.MeshBasicMaterial({
+      color: config.color ?? 0xff8a00,
+      transparent: true,
+      opacity: config.opacity ?? 0.32,
+      depthWrite: false,
+    });
+
+    const width = config.width ?? 1.42;
+    const height = config.height ?? 1.98;
+    const thickness = config.thickness ?? 0.085;
+    const z = config.z ?? 0.018;
+
+    const top = new THREE.Mesh(
+      new THREE.BoxGeometry(width, thickness, thickness),
+      material
+    );
+    top.position.set(0, height / 2, z);
+
+    const bottom = top.clone();
+    bottom.position.y = -height / 2;
+
+    const left = new THREE.Mesh(
+      new THREE.BoxGeometry(thickness, height, thickness),
+      material
+    );
+    left.position.set(-width / 2, 0, z);
+
+    const right = left.clone();
+    right.position.x = width / 2;
+
+    group.add(top, bottom, left, right);
+
+    return group;
   }
 
   createParticles(config) {
@@ -70,6 +115,11 @@ export class PortalEffects extends Component {
     if (!this.object) return;
 
     this.elapsedTime += delta;
+
+    if (this.glow) {
+      const pulse = 1 + Math.sin(this.elapsedTime * 2.5) * 0.025;
+      this.glow.scale.setScalar(pulse);
+    }
 
     if (this.particles) {
       this.particles.rotation.z += delta * 0.18;
