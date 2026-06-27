@@ -5,10 +5,11 @@ import { TrackingPipeline } from "../../engine/tracking/TrackingPipeline.js";
 import { TrackingFilterFactory } from "../../engine/tracking/TrackingFilterFactory.js";
 
 export class MindARProvider extends TrackingProvider {
-  constructor(sceneDefinition) {
+  constructor(sceneDefinition, context = null) {
     super();
 
     this.sceneDefinition = sceneDefinition;
+    this.context = context;
 
     this.mindarThree = null;
     this.anchor = null;
@@ -44,7 +45,10 @@ export class MindARProvider extends TrackingProvider {
 
     this.anchor = this.mindarThree.addAnchor(0);
 
-    this.sceneLoader = new SceneLoader(this.sceneDefinition);
+    this.sceneLoader = new SceneLoader(
+      this.sceneDefinition,
+      this.context
+    );
     this.sceneLoader.attachTo(this.anchor.group);
 
     this.initializeTrackingPipeline();
@@ -53,6 +57,7 @@ export class MindARProvider extends TrackingProvider {
       console.log("Target found");
 
       this.trackingPipeline.reset();
+      this.sceneLoader?.start();
 
       this.targetFoundCallback?.();
     };
@@ -85,8 +90,6 @@ export class MindARProvider extends TrackingProvider {
     if (!this.mindarThree) return;
 
     await this.mindarThree.start();
-
-    this.sceneLoader?.start();
 
     const { renderer, scene, camera } = this.mindarThree;
 

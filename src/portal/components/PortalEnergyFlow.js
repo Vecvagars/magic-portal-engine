@@ -10,6 +10,8 @@ export class PortalEnergyFlow extends Component {
   }
 
   create() {
+    console.log("PortalEnergyFlow create()", this.config);
+
     this.object = new THREE.Group();
 
     if (!this.config.enabled) {
@@ -83,6 +85,11 @@ export class PortalEnergyFlow extends Component {
   }
 
   update(delta) {
+    if (!this._logged) {
+    console.log("PortalEnergyFlow update()");
+    this._logged = true;
+    }
+    
     if (!this.object) return;
 
     this.elapsedTime += delta;
